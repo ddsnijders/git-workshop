@@ -11,6 +11,7 @@ And if you want it bad enough
 Just close your eyes and dream, it’s never far
 It’s standing right there where you are
 
+<<<<<<< HEAD
 Where we can dream a little bigger right now
 If we open up our eyes
 
@@ -20,6 +21,17 @@ Our memories are all around,
 And I know we’ve only just begun
 
 Yeah, hey
+=======
+Where we can dram a little bigger right now
+If we open up our eyes
+
+I’m ready fr the ride (I’m ready for the ride)
+I’m ready to bring light just like the sun, yeah
+Our memories are al around,
+And I know we’ve only just begun
+
+Yeah, heeeeeeey
+>>>>>>> develop
 
 Keep on looking up (keep on looking up)
 Never forget just how far we’ve come
@@ -44,11 +56,19 @@ I’m ready to bring light just like the sun
 The memories are all around
 And I know we’ve only just begun
 
+<<<<<<< HEAD
 Yeah, yeah
 
 Keep on looking up (keep on looking up)
 Never forget just how far we’ve come
 The memories are all around
+=======
+Yeah, yeeeeeeah
+
+Keep on looking up (keep on looking up)
+Never forgt just how far we’ve come
+The memories are all arround
+>>>>>>> develop
 And I know we’ve only just begun
 (And I know we’ve just begun)
 Oh and I, yeah, I’m ready for the ride

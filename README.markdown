@@ -21,9 +21,17 @@ As we're going to use `Github` during this workshop. Create a Github account on 
 
 If you've created an account, open your terminal and type:
 `cd ~/.ssh && ssh-keygen`
-
 Press ENTER twice if you don't want to set a password for now, but otherwise follow the instructions in your terminal, until you'll receive a key (you'll see something with [RSA 3072] ending with [SHA256] and then some characters below).
-Now type:
+
+!!! If this doesn't work, then on Windows do this:
+- Open PowerShell (an application on your computer, you can find it via the search bar of your menu by typing in "PowerShell".
+- Type: `ssh-keygen -t rsa -C "you@example.com"` : Change you@example.com to your Github email address (but don't remove the "").
+- Press ENTER
+- Press ENTER
+- Press ENTER
+
+- Now a key is generated. Now move to the folder that you created: `cd .ssh`.
+- and then continue with the following instructions:
 
 On OS X run: `cat id_rsa.pub | pbcopy`
 
@@ -68,13 +76,29 @@ called `git-workshop`. This is your `working directory`
     $ cd git-workshop
     $ ls
 
+On Windows you use `dir` in stead of `ls` so:
+
+    $ cd git-workshop
+    $ dir
+
+
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Help-browser.svg/20px-Help-browser.svg.png)
 Stuck? Ask for help from the workshop staff
 
 For the curious, you should also see the `.git` subdirectory. This is
 where all your repository’s data and history is kept.
 
+Mac:
+
     $ ls -a .git
+
+Windows (Command Prompt):
+
+    $ .git
+    
+Windows (powershell):
+
+    $ ls .git
 
 You will see :
 
@@ -83,13 +107,33 @@ You will see :
 The staging area
 ----------------
 
-Now, let’s try adding some files into the project. Create a couple of
+Now, let’s try adding some files into the project (in your own branch). Create a couple of
 files.
 
 Let’s create two files named `bob.txt` and `alice.txt`. You can do this by using the command below, or simple just create them in the folder by adding the files manually.
+Mac:
 
     $ touch alice.txt bob.txt
 
+Windows (Command Prompt):
+
+    $ echo.> alice.txt bob.txt
+
+Windows (Powershell):
+
+    $ New-Item alice.txt,bob.txt
+
+You can check if creation of these files was succesfull by checking if they appear in the 'staging area. You do this by using:
+
+    $git status
+    
+You should see something similar to:
+    On branch feature/mynewbranch
+    Untracked files:
+      (use "git add <file>..." to include in what will be committed)
+            alice.txt
+            bob.txt
+    
 Let’s use a mail analogy.
 
 In Git, you first add content to the `staging area` by using `git add`.
@@ -100,6 +144,22 @@ You finalize the process and record it into the git index by using
 Let’s add the files to the staging area
 
     $ git add alice.txt bob.txt
+    
+When using "git status" again, you'll see that they've been added!
+
+    $git status
+    
+You should see something similar to:
+    On branch feature/mynewbranch
+    Changes to be committed:
+      (use "git restore --staged <file>..." to unstage)
+            new file:   alice.txt
+            new file:   bob.txt
+    
+This is especially usefull if you're feeling bold, and would like to add all changes in one go by using
+
+    $ git add .
+
 
 Committing
 ----------
@@ -119,15 +179,19 @@ We should now have a new commit. To see all the commits so far, use
 `git log`
 
     $ git log
-
+   
 The log should show all commits listed from most recent first to least
 recent. You would see various information like the name of the author,
 the date it was committed, a commit SHA number, and the message for the
 commit.
 
 You should also see your most recent commit, where you added the two new
-files in the previous section. However, git log does not show the files
-involved in each commit. To view more information about a commit, use
+files in the previous section. 
+    
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Help-browser.svg/20px-Help-browser.svg.png)
+Stuck? Use 'q' to get out of this overview of git log.
+    
+Git log does not show the files involved in each commit. To view more information about a commit, use
 `git show`.
 
     $ git show
@@ -240,12 +304,12 @@ Stuck? Ask for help from the workshop staff
 Branching
 ---------
 
-Most large code bases have at least two branches - a ‘master’ branch and a
-‘development’ branch. The master branch is code which is OK to be deployed
+Most large code bases have at least two branches - a ‘master’ or 'main' branch and a
+‘development’ branch. The main branch is code which is OK to be deployed
 on to a website, or downloaded by customers. The development branch
 allows developers to work on features which might not be bug free. Only
 once everyone is happy with the development branch would it be merged
-with the master branch.
+with the main branch.
 
 Creating a branch in Git is easy. The `git branch` command, when used by
 itself, will list the branches you currently have
@@ -253,7 +317,7 @@ itself, will list the branches you currently have
     $ git branch
 
 The `*` should indicate the current branch you are on, which is
-`master`.
+`main`.
 
 If you wish to start another branch, use
 `git checkout -b (new-branch-name)` :
@@ -267,10 +331,9 @@ Try git branch again to check which branch you are currently on:
 
     $ git branch
       jeroen-egelmeers
-    * master
+    * main
 
-The new branch is now created. Now let’s work in that branch. To switch
-to the new branch:
+The new branch is now created. Now let’s work in that branch. By using `git checkout -b jeroen-egelmeers` you directly switched to that branch. If you did something else in the meantime, and want to switch back to the branch to work on it use:
 
     $ git checkout jeroen-egelmeers
 
@@ -282,12 +345,12 @@ Let’s perform some commits now,
     $ git add test.txt
     $ git commit -m "Added experimental txt"
 
-Now, let’s compare them to the master branch. Use `git diff`
+Now, let’s compare them to the develop branch. Use `git diff`
 
-    $ git diff master
+    $ git diff main
 
 Basically what the above output says is that `test.txt` is present on
-the `jeroen-egelmeers` branch, but is absent on the `development` or `master` branch.
+the `jeroen-egelmeers` branch, but is absent on the `develop` or `main` branch.
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Help-browser.svg/20px-Help-browser.svg.png)
 Stuck? Ask for help from the workshop staff
@@ -296,15 +359,22 @@ Now you see me, now you don’t
 -----------------------------
 
 Git is good enough to handle your files when you switch between
-branches. Switch back to the `master` branch
+branches. Switch back to the `main` branch
 
-Try switching back to the master branch (Hint: It’s the same command we
-used to switch to the exp1 branch above)
+Try switching back to the main branch (Hint: It’s the same command we
+used to switch to the branch with your name above)
 
 Now, where’s our `test.txt` file ?
 
+Mac: 
+
     $ ls
-    README.textile  alice.txt   bob.txt     gamow.txt
+    README.textile  alice.txt   bob.txt     alpher.txt
+    
+Windows:
+
+    $ dir
+    README.textile  alice.txt   bob.txt     alpher.txt
 
 As you can see the new file you created in the other branch has
 disappeared. Not to worry, it is safely tucked away, and will re-appear
@@ -315,18 +385,25 @@ now present.
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Help-browser.svg/20px-Help-browser.svg.png)
 Stuck? Ask for help from the workshop staff
+    
+Sidenote. The naming of the branch is important for yourself and others to be able to find and understand what's been changed. There are several resources online on naming conventions. Suggestions are in example: 
+- use category words like: Wip/Feat/Bug/Junk/Test
+- use slashes / to identify project, apps or personal names
+- add unique ids
+- add a short description
 
-Merging
+
+Merging two local branches
 -------
 
-We now try out merging. Eventually you will want to merge two branches
+We now try out merging. Eventually you will want to merge two local branches
 together after the conclusion of work.
 `git merge` allows you to do that.
 
 Git merging works by first switching the branch you want to *into*, and
 then running the command to merge the other branch in.
 
-We now want to merge our `jeroen-egelmeers` (but then your own) branch into `master`. First, switch to
+We now want to merge our `jeroen-egelmeers` (but then your own) branch into `develop`. First, switch to
 the `develop` branch.
 
     git checkout develop
@@ -347,10 +424,33 @@ specify the branch you want to merge.
 
 At this point, you can also try out `gitk` to visualize the changes and
 how the two branches have merged
+    
+Pull
+-------
+When working in a big project you can safely asume that there will always be someone working and pushing changes to main. To get those changes you need to do update your local repository with the remote changes on main. That can be done using fetch before the git merge: 
+    
+    $ git fetch main
+    
+In such projects though, you could also start using an alternative, the git pull:
+    
+    $ git pull origin main
+    
+This will do the same as a git fech & git merge combined. 
+    
+Either way, having your work updated with the current version of main will increase your chances of the next step (Pull Request) succeeding.
 
 Pull Request
 -------
 In modern development, we work with Pull Requests. Here you can ask your peers to review your code. Let's try that out in Github!
+To do this, we first have to fork this repository. You can do this by clicking on the right top of this workshop on "Fork". More information about forking a repository you can find here: [this tutorial](https://help.github.com/articles/fork-a-repo)
+
+If you have forked the workshop to your own Github profile, you can start creating pull requests on that version.
+So:
+- Clone the version you just forked to your own profile to your local environment.
+
+Tip: No clue how to clone anymore? Check the "clone" part of this workshop above!
+
+Follow the steps about Pull Requests:
 
 - Create a new branch with again your name, but then add `-PR` after it. So for example:
   `jeroen-egelmeers-PR`
@@ -365,11 +465,11 @@ Do you still remember how to create the branch? If not, scroll back up, and find
 
     git push
 
-Probably you got an error now. You did not yet create the branch on the online repostiroy, but only local.
+Probably you got an error now. You did not yet create the branch on the online repository, but only local.
 Git gives an error message stating how to fix your issue. Can you figure it out yourself?
 
-Now go to our online repository on Github using this link:
-`https://github.com/JeroenEgelmeers/git-workshop`
+Now go to our online repository on Github using the newly created fork on your profile. Go to Github, click on your profile image. Then on "Your profile".
+Then click on "Repositories" on the menu next to your profile image. And find the forked repository there. Click then on the green "Code" button to get the right clone URL.
 
 - Click on the `Pull Request` tab.
 - Click on the green button `New pull request`
@@ -379,7 +479,7 @@ Now go to our online repository on Github using this link:
 - Now there will be a new button `Create pull request` click on it to open your Pull Request.
 
 Now you can edit your Pull Request. Github has an option to create "draft" Pull Requests. This is following the early pull request strategy which was explained to you during the presentaiton.
-It's helpfull to get feedback along the way. But in some repostiries (such as Bitbucket) this feature is not available. In this case you could change the title, and put "WIP" or "DRAFT" in front of it. This way others know, you're still working on it.
+It's helpfull to get feedback along the way. But in some repositories (such as Bitbucket) this feature is not available. In this case you could change the title, and put "WIP" or "DRAFT" in front of it. This way others know, you're still working on it.
 Let's just create a Draft Pull Request and change nothing in the title or textbox. You can simple click on the arrow next to the green button "Create pull request".
 
 If you click on the arrow, the option for a "Draft Pull Request" will be shown.
@@ -424,30 +524,29 @@ Stuck? Ask for help from the workshop staff
 Fixing a conflict
 -----------------
 
-You should see a `conflict` with the `gamow.txt` file. This means that
-the same line of text was edited and committed on both the master branch
+You should see a `conflict` with the `alpher.txt` file. This means that
+the same line of text was edited and committed on both the develop branch
 and the alpher branch. The output below basically tells you the current
 situation :
 
-    Auto-merging gamow.txt
-    CONFLICT (content): Merge conflict in gamow.txt
+    Auto-merging alpher.txt
+    CONFLICT (content): Merge conflict in alpher.txt
     Automatic merge failed; fix conflicts and then commit the result.
 
-If you open the `gamow.txt` file, you will see something similar as
+If you open the `alpher.txt` file, you will see something similar as
 below:
 
-    $ cat gamow.txt
+    $ cat alpher.txt
     <<<<<<< HEAD
-    It was eventually recognized that most of the heavy elements observed in the present universe are the result of stellar nucleosynthesis (http://en.wikipedia.org/wiki/Stellar_nucleosynthesis) in stars, a theory largely developed by Bethe.
+    Some changes
     =======
 
-    http://en.wikipedia.org/wiki/Stellar_nucleosynthesis
-    Stellar nucleosynthesis is the collective term for the nuclear reactions taking place in stars to build the nuclei of the elements heavier than hydrogen. Some small quantity of these reactions also occur on the stellar surface under various circumstances. For the creation of elements during the explosion of a star, the term supernova nucleosynthesis is used.
+    Some other changes
     >>>>>>> alpher
 
 Git uses pretty much standard conflict resolution markers. The top part
 of the block, which is everything between `<<<<<< HEAD` and `======` is
-what was in your current branch.\
+what was in your current branch.
 The bottom half is the version that is present from the `alpher` branch.
 To resolve the conflict, you either choose one side or merge them as you
 see fit.
@@ -456,7 +555,8 @@ For example, I might decide to choose the version from the `alpher`
 branch.
 
 Now, try to **fix the merge conflict**. Pick the text that you think is
-better (Ask for help if stumped)
+better (Ask for help if stumped). You can also try using the Github Pull Request if you're stuck!
+Github has nice options to edit in the webpage itself!
 
 Once I have done that, I can then mark the conflict as fixed by using
 `git add` and `git commit`.
@@ -464,10 +564,23 @@ Once I have done that, I can then mark the conflict as fixed by using
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Help-browser.svg/20px-Help-browser.svg.png)
 Stuck? Ask for help from the workshop staff
 
-    $ git add gamow.txt
+    $ git add alpher.txt
     $ git commit -m "Fixed conflict"
+    
+Normally, you should now "`git push`" your commit. How ever, don't do this at this time to make sure others can also try this excersise!
 
-Congratulations. You have fixed the conflict. All is good in the world.
+Congratulations. You have fixed the conflict. All is good in the world.    
+    
+Tools!
+-----------------
+Tools make your life a lot easier. Using a tool, you don't have to remember all the different commands all the time you've just learned. So let's also try a tool to practice and show you the difference. As you've learned during the presentation, a tool is nice and can make your life easier, but having knowledge about what a tool does behind the scene, is very important! You now learned how to do it via command line, this way you actually know what a tool does when clicking on a button.
+
+Now let's try to do the merging step again, but then using `Github Desktop`.
+
+- Go to: https://desktop.github.com/ and download the tool.
+- Can you figure out how to add a repository? (add the repository you're currently on: `git@github.com:JeroenEgelmeers/git-workshop.git`)
+- Now go back to the `alpher` branch, and undo your merge. You can switch branches if needed using Github Desktop! Can you find the right button?
+- When you've undone your changes, you can try merging again via Github Desktop. You'll find out that merging via a tool is much easier. It gives you options to merge, and helps you making the right decisions. Try to merge again, but please do not push it to the repo so others can try it also!
 
 Congratulations! You've completed the workshop!
 ---
@@ -483,47 +596,14 @@ You have learnt :
 7. Undoing changes 
 8. Branching and merging 
 9. Pull Requests (including WIP/DRAFT)
-10. Fixing conflicts
+10. Forking excisting projects
+11. Fixing conflicts
+12. Using GIT via Github Desktop
 
-Now You can choose two tracks, either Part II (below) which covers time travel and
-mangling your git history, or Part III (even below-er) which covers Github pull
-requests and cat gifs.
+Next time someone is asking you something about Git, you're ready to answer them! Congratulations!
+Want to learn more? Try to create your very own repository, and start playing!
 
-Part II
-=======
-
-Check out the `revert` branch on this repository for further instructions!
-You can always get back to this version of the readme by checking out the master
-branch.
-
-Part III
-========
-
-GitHub
-------
-But, wait. There’s more. What about this distributed sharing thing with
-Git ?
-
-To be able to share, we’ll need a server to host our git repositiories.
-GitHub (<a href="https://github.com/">github.com</a>) is probably the
-easiest place to begin with.
-
-Login or sign up with GitHub
-----------------------------
-
-If you've already got an account you can skip on to creating the repo on
-github, or forking this repository and cloning it down to your local machine.
-
-Otherwise...
-
-Go <a href="https://github.com/signup">sign up for an account</a> at
-GitHub; Or login into your GitHub account if you had previously signed
-up.
-
-Hint: You may need to setup git cache your GitHub password - see
-<a href="https://help.github.com/articles/set-up-git">https://help.github.com/articles/set-up-git</a>
-
-Then come back here, we’ll wait.
+I wish you a wonderful day!
 
 Create your first GitHub repository
 -----------------------------------
@@ -537,20 +617,14 @@ then share with others
 
 Then come back here, we’ll wait.
 
-Fork a repo
------------
-
-Go to [this tutorial](https://help.github.com/articles/fork-a-repo)
-Then come back here, we’ll wait.
-
 Fin
 ---
 
 You have learnt:
 
-1.  Forking a repo at GitHub
-2.  Git push
-3.  Git pull
+1. Creating your own repository! 
+
+Congratulations! you've finished this workshop!
 
 ### References and Further reading
 
@@ -569,8 +643,6 @@ Author
 This work is licensed under the Creative Commons
 Attribution-NonCommercial-ShareAlike 3.0 License\
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>\
-Author: Thong Kuah
-Contributors: Andy Newport, Nick Malcolm
-
-Was editted for internal use by Jeroen Egelmeers
+This workshop was based on the Workshop from Thong Kuah, and exteded by Jeroen Egelmeers.
+Contributors to this version: lliza
 
